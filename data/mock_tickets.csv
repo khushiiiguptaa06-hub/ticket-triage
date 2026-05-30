@@ -1,0 +1,6 @@
+title,description,category,urgency
+Login broken,Can't access dashboard after 2FA reset,Account,High
+Overcharged on bill,Charged twice for annual plan need refund ASAP,Billing,High
+Feature request,I would love a dark mode toggle in settings,Feature,Low
+Slow API response,Endpoints timing out during peak hours,Tech,Medium
+Account locked,Too many failed login attempts please unlock,Account,High
