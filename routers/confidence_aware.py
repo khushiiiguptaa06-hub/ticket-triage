@@ -4,15 +4,14 @@ from routers.base import Router
 
 
 class ConfidenceAwareRouter(Router):
-    def __init__ (self, rule_router: Router, policy: ConfidencePolicy):
+    def __init__(self, rule_router: Router, policy: ConfidencePolicy):
         self.rule_router = rule_router
         self.policy = policy
 
     def route(self, ticket: Ticket, prediction: dict) -> str:
         if self.policy.should_route_to_human(
-    prediction["confidence"],
-    prediction["urgency"],
-         ):
+            prediction["confidence"],
+            prediction["urgency"],
+        ):
             return "human-review"
         return self.rule_router.route(ticket, prediction)
-    

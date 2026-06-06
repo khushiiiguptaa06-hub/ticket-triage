@@ -46,21 +46,12 @@ class MetricsCollector:
             }
 
         human_reviews = sum(
-            1
-            for log in self.logs
-            if log["routed_to"] == "human-review"
+            1 for log in self.logs if log["routed_to"] == "human-review"
         )
 
-        breaches = sum(
-            1
-            for log in self.logs
-            if log["sla_breach"]
-        )
+        breaches = sum(1 for log in self.logs if log["sla_breach"])
 
-        avg_confidence = (
-            sum(log["confidence"] for log in self.logs)
-            / len(self.logs)
-        )
+        avg_confidence = sum(log["confidence"] for log in self.logs) / len(self.logs)
 
         return {
             "total_processed": len(self.logs),

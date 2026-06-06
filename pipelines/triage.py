@@ -24,10 +24,14 @@ class TriagePipeline:
         processed_at = datetime.now(timezone.utc)
         prediction = self.classifier.predict(ticket)
         assigned_team = self.router.route(ticket, prediction)
-        
+
         self.metrics.record(
-            ticket.id, prediction["category"], prediction["urgency"],
-            prediction["confidence"], assigned_team, processed_at
+            ticket.id,
+            prediction["category"],
+            prediction["urgency"],
+            prediction["confidence"],
+            assigned_team,
+            processed_at,
         )
 
         return {
@@ -36,5 +40,5 @@ class TriagePipeline:
             "urgency": prediction["urgency"],
             "confidence": prediction["confidence"],
             "assigned_to": assigned_team,
-            "metrics_summary": self.metrics.summary()
+            "metrics_summary": self.metrics.summary(),
         }

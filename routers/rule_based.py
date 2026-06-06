@@ -8,11 +8,9 @@ class RuleBasedRouter(Router):
 
         if category == "Billing":
             return "finance-team"
-        elif category in("Tech", "Bug"):
+        elif category in ("Tech", "Bug"):
             return "engineering-team"
-        elif category =="Account":
+        elif category == "Account":
             return "support-team"
         else:
             return "general-queue"
-        
-
