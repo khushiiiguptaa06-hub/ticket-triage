@@ -1,9 +1,10 @@
-from enum import Enum
-from pydantic import BaseModel, Field, field_validator
 import uuid
 from datetime import datetime, timezone
-from typing import Any, Optional 
-from pydantic import ValidationError
+from enum import Enum
+from typing import Any
+
+from pydantic import BaseModel, Field, ValidationError, field_validator
+
 
 class Category(str, Enum):
     BILLING = "Billing"
@@ -21,8 +22,8 @@ class Ticket(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str = Field(...,min_length=3, max_length=150) 
     description: str = Field(...,min_length=10, max_length=2000)
-    category: Optional[Category] = None
-    urgency: Optional[Urgency] = None
+    category: Category | None = None
+    urgency: Urgency | None = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     
     @field_validator("title", "description",mode="before")
@@ -34,8 +35,10 @@ class Ticket(BaseModel):
         return v
     
 if __name__ == "__main__":
-
-    t1 = Ticket(title="Login broken", description="Can't access dashboard after 2FA reset") 
+    t1 = Ticket(
+    title="Login broken",
+    description="Can't access dashboard after 2FA reset",)
+    
     print(f"Valid: {t1.title} | ID: {t1.id[:8]}... | Created: {t1.created_at}")
     t2 = Ticket(title="Overcharged! ", description=" Charged twice, need refund ASAP")
     print(f"🧹 Cleaned: title='{t2.title}' | desc='{t2.description}'")

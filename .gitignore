@@ -13,3 +13,9 @@ __pycache__/
 
 # Ruff
 .ruff_cache/
+
+# MyPy
+.mypy_cache/
+
+# Editable install metadata
+ticket_triage.egg-info/

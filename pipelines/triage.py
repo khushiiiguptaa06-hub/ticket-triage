@@ -1,11 +1,13 @@
 # pipelines/triage.py
 from datetime import datetime, timezone
-from models.ticket import Ticket
+
 from classifiers.sklearn_cls import SklearnClassifier
-from routers.rule_based import RuleBasedRouter
-from routers.confidence_aware import ConfidenceAwareRouter
-from policies.threshold import ThresholdPolicy
+from models.ticket import Ticket
 from observers.metrics import MetricsCollector
+from policies.threshold import ThresholdPolicy
+from routers.confidence_aware import ConfidenceAwareRouter
+from routers.rule_based import RuleBasedRouter
+
 
 class TriagePipeline:
     def __init__(self, conf_threshold: float = 0.6):

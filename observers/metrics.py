@@ -1,11 +1,10 @@
-from datetime import datetime
-from typing import Dict, List
 import random
+from datetime import datetime
 
 
 class MetricsCollector:
     def __init__(self):
-        self.logs: List[Dict] = []
+        self.logs: list[dict] = []
 
     def record(
         self,
@@ -37,7 +36,7 @@ class MetricsCollector:
             }
         )
 
-    def summary(self) -> Dict:
+    def summary(self) -> dict:
         if not self.logs:
             return {
                 "total_processed": 0,

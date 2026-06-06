@@ -1,5 +1,6 @@
-from routers.base import Router
 from models.ticket import Ticket
+from routers.base import Router
+
 
 class RuleBasedRouter(Router):
     def route(self, ticket: Ticket, prediction: dict) -> str:

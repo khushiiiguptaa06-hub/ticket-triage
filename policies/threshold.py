@@ -1,5 +1,6 @@
 from policies.base import ConfidencePolicy
 
+
 class ThresholdPolicy(ConfidencePolicy):
     def __init__(self, conf_threshold: float = 0.6):
         self.conf_threshold = conf_threshold
