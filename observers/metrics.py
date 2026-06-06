@@ -1,11 +1,12 @@
 import random
 from datetime import datetime
+from typing import Any
 
 
 class MetricsCollector:
-    def __init__(self):
-        self.logs: list[dict] = []
-
+    def __init__(self) -> None:
+        self.logs: list[dict[str, Any]] = []
+        
     def record(
         self,
         ticket_id: str,
@@ -36,7 +37,7 @@ class MetricsCollector:
             }
         )
 
-    def summary(self) -> dict:
+    def summary(self) -> dict[str, Any]:
         if not self.logs:
             return {
                 "total_processed": 0,

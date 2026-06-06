@@ -1,5 +1,5 @@
-# pipelines/triage.py
 from datetime import datetime, timezone
+from typing import Any, cast
 
 from classifiers.sklearn_cls import SklearnClassifier
 from models.ticket import Ticket
@@ -10,35 +10,55 @@ from routers.rule_based import RuleBasedRouter
 
 
 class TriagePipeline:
-    def __init__(self, conf_threshold: float = 0.6):
+    def __init__(self, conf_threshold: float = 0.6) -> None:
         self.classifier = SklearnClassifier()
         self.rule_router = RuleBasedRouter()
         self.conf_policy = ThresholdPolicy(conf_threshold=conf_threshold)
-        self.router = ConfidenceAwareRouter(self.rule_router, self.conf_policy)
+
+        self.router = ConfidenceAwareRouter(
+            self.rule_router,
+            self.conf_policy,
+        )
+
         self.metrics = MetricsCollector()
 
-    def train(self, mock_data: list[dict]) -> None:
+    def train(
+        self,
+        mock_data: list[dict[str, str]],
+    ) -> None:
         self.classifier.train(mock_data)
 
-    def process(self, ticket: Ticket) -> dict:
+    def process(
+        self,
+        ticket: Ticket,
+    ) -> dict[str, Any]:
         processed_at = datetime.now(timezone.utc)
+
         prediction = self.classifier.predict(ticket)
-        assigned_team = self.router.route(ticket, prediction)
+
+        assigned_team = self.router.route(
+            ticket,
+            prediction,
+        )
+
+        category = str(prediction["category"])
+        urgency = str(prediction["urgency"])
+        confidence = cast(float, prediction["confidence"])
 
         self.metrics.record(
             ticket.id,
-            prediction["category"],
-            prediction["urgency"],
-            prediction["confidence"],
+            category,
+            urgency,
+            confidence,
             assigned_team,
             processed_at,
         )
 
         return {
             "ticket_id": ticket.id,
-            "category": prediction["category"],
-            "urgency": prediction["urgency"],
-            "confidence": prediction["confidence"],
+            "category": category,
+            "urgency": urgency,
+            "confidence": confidence,
             "assigned_to": assigned_team,
             "metrics_summary": self.metrics.summary(),
         }

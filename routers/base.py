@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 from models.ticket import Ticket
 
 
 class Router(ABC):
     @abstractmethod
-    def route(self, ticket: Ticket, prediction: dict) -> str:
+    def route(self, ticket: Ticket, prediction: dict[str, Any]) -> str:
         pass

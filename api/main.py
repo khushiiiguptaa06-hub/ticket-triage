@@ -1,5 +1,7 @@
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException
@@ -20,40 +22,60 @@ class TicketInput(BaseModel):
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     global pipeline
 
     logger.info("Loading training data and initializing pipeline...")
 
     df = pd.read_csv(DATA_PATH)
-    mock_data = df[["title", "description", "category", "urgency"]].to_dict(
-        orient="records"
-    )
+
+    mock_data = df[
+        ["title", "description", "category", "urgency"]
+    ].to_dict(orient="records")
 
     pipeline = TriagePipeline(conf_threshold=0.6)
     pipeline.train(mock_data)
 
     logger.info("Pipeline ready. Accepting tickets.")
+
     yield
 
     logger.info("Shutting down application...")
 
 
-app = FastAPI(title="Ticket Triage Engine", lifespan=lifespan)
+app = FastAPI(
+    title="Ticket Triage Engine",
+    lifespan=lifespan,
+)
 
 
 @app.post("/submit")
-async def submit_ticket(ticket: TicketInput):
+async def submit_ticket(
+    ticket: TicketInput,
+) -> dict[str, Any]:
     if pipeline is None:
-        raise HTTPException(status_code=503, detail="Pipeline not initialized")
+        raise HTTPException(
+            status_code=503,
+            detail="Pipeline not initialized",
+        )
 
-    new_ticket = Ticket(title=ticket.title, description=ticket.description)
+    new_ticket = Ticket(
+        title=ticket.title,
+        description=ticket.description,
+    )
+
     result = pipeline.process(new_ticket)
 
-    logger.info(f"Ticket {new_ticket.id[:8]} routed to {result['assigned_to']}")
+    logger.info(
+        f"Ticket {new_ticket.id[:8]} routed to {result['assigned_to']}"
+    )
+
     return result
 
 
 @app.get("/health")
-async def health_check():
-    return {"status": "ok", "pipeline_ready": pipeline is not None}
+async def health_check() -> dict[str, Any]:
+    return {
+        "status": "ok",
+        "pipeline_ready": pipeline is not None,
+    }
