@@ -6,7 +6,7 @@ from typing import Any
 class MetricsCollector:
     def __init__(self) -> None:
         self.logs: list[dict[str, Any]] = []
-        
+
     def record(
         self,
         ticket_id: str,

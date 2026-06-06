@@ -11,9 +11,9 @@ DATA_PATH = Path(__file__).parent / "data" / "mock_tickets.csv"
 def main() -> None:
     df = pd.read_csv(DATA_PATH)
 
-    mock_data = df[
-        ["title", "description", "category", "urgency"]
-    ].to_dict(orient="records")
+    mock_data = df[["title", "description", "category", "urgency"]].to_dict(
+        orient="records"
+    )
 
     pipeline = TriagePipeline()
     pipeline.train(mock_data)

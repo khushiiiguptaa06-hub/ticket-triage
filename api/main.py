@@ -29,9 +29,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     df = pd.read_csv(DATA_PATH)
 
-    mock_data = df[
-        ["title", "description", "category", "urgency"]
-    ].to_dict(orient="records")
+    mock_data = df[["title", "description", "category", "urgency"]].to_dict(
+        orient="records"
+    )
 
     pipeline = TriagePipeline(conf_threshold=0.6)
     pipeline.train(mock_data)
@@ -66,9 +66,7 @@ async def submit_ticket(
 
     result = pipeline.process(new_ticket)
 
-    logger.info(
-        f"Ticket {new_ticket.id[:8]} routed to {result['assigned_to']}"
-    )
+    logger.info(f"Ticket {new_ticket.id[:8]} routed to {result['assigned_to']}")
 
     return result
 

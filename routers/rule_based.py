@@ -7,7 +7,7 @@ from routers.base import Router
 class RuleBasedRouter(Router):
     def route(self, ticket: Ticket, prediction: dict[str, Any]) -> str:
         category = prediction.get("category")
-        
+
         if category == "Billing":
             return "finance-team"
 

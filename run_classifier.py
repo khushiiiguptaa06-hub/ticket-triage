@@ -11,9 +11,9 @@ DATA_PATH = Path(__file__).parent / "data" / "mock_tickets.csv"
 def main() -> None:
     df = pd.read_csv(DATA_PATH)
 
-    mock_tickets = df[
-        ["title", "description", "category", "urgency"]
-    ].to_dict(orient="records")
+    mock_tickets = df[["title", "description", "category", "urgency"]].to_dict(
+        orient="records"
+    )
 
     cls = SklearnClassifier()
     cls.train(mock_tickets)

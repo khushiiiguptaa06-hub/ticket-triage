@@ -14,9 +14,7 @@ class SklearnClassifier(Classifier):
             stop_words="english",
             max_features=500,
         )
-        self.model: MultiOutputClassifier = MultiOutputClassifier(
-            LogisticRegression()
-        )
+        self.model: MultiOutputClassifier = MultiOutputClassifier(LogisticRegression())
         self.categories = [c.value for c in Category]
         self.urgencies = [u.value for u in Urgency]
 
@@ -43,14 +41,7 @@ class SklearnClassifier(Classifier):
         preds = self.model.predict(X)[0]
         probs = self.model.predict_proba(X)
 
-        confidence = float(
-            np.mean(
-                [
-                    np.max(p)
-                    for p in probs
-                ]
-            )
-        )
+        confidence = float(np.mean([np.max(p) for p in probs]))
 
         return {
             "category": preds[0],

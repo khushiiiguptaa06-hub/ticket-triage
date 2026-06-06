@@ -13,9 +13,9 @@ def trained_pipeline() -> TriagePipeline:
 
     df = pd.read_csv(data_path)
 
-    mock_data = df[
-        ["title", "description", "category", "urgency"]
-    ].to_dict(orient="records")
+    mock_data = df[["title", "description", "category", "urgency"]].to_dict(
+        orient="records"
+    )
 
     pipe = TriagePipeline(conf_threshold=0.6)
     pipe.train(mock_data)
