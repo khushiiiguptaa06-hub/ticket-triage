@@ -1,29 +1,69 @@
-<<<<<<< HEAD
-#  AI Ticket Triage Engine
+# AI Ticket Triage Engine
 
-An AI-powered backend system that automatically classifies customer support tickets, predicts their category and urgency, routes them to the appropriate support team using confidence-aware routing, stores results in SQLite, and exposes REST APIs with FastAPI.
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-ORM-D71F00)
+![Render](https://img.shields.io/badge/Render-Deployed-46E3B7)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-The project demonstrates modern backend development practices including Object-Oriented Programming (OOP), machine learning integration, REST API development, SQLAlchemy ORM, Docker containerization, automated testing, static type checking, and clean project architecture.
+An end-to-end machine learning-powered backend that automatically classifies, prioritizes, routes, and stores customer support tickets through a production-style REST API.
 
----
-
-##  Features
-
-*  Automatic ticket classification using Scikit-learn
-*  Confidence-aware routing to support teams
-*  Human review queue for low-confidence predictions
-*  SQLite persistence using SQLAlchemy ORM
-*  Metrics endpoint for processed tickets
-*  FastAPI REST API
-*  Interactive Swagger documentation
-*  Unit testing with Pytest
-*  Static type checking with MyPy
-*  Code formatting with Ruff
-*  Docker support
+The project demonstrates modern backend engineering practices including machine learning integration, object-oriented programming, REST API development, SQLAlchemy ORM, Docker containerization, automated testing, static type checking, and cloud deployment.
 
 ---
 
-##  Architecture
+# Live Demo
+
+- **Swagger Documentation:** https://ticket-triage-9140.onrender.com/docs
+- **Health Endpoint:** https://ticket-triage-9140.onrender.com/health
+- **Metrics Endpoint:** https://ticket-triage-9140.onrender.com/metrics
+
+---
+
+## Screenshots
+
+### Swagger UI
+
+![Swagger UI](images/swagger.png)
+
+### Health Endpoint
+
+![Health Endpoint](images/health.png)
+
+### Metrics Endpoint
+
+![Metrics Endpoint](images/metrics.png)
+
+---
+
+## Features
+
+- Automatic ticket classification using Scikit-learn
+- Confidence-aware routing using prediction confidence
+- Human review queue for uncertain predictions
+- SQLite persistence using SQLAlchemy ORM
+- Metrics endpoint for processed tickets
+- FastAPI REST API
+- Interactive Swagger/OpenAPI documentation
+- Dockerized deployment
+- Cloud deployment using Render
+- Unit testing with Pytest
+- Static type checking with MyPy
+- Code formatting with Ruff
+
+---
+
+## Design Patterns Used
+
+- Strategy Pattern
+- Observer Pattern
+- Dependency Injection
+- Modular Pipeline Architecture
+
+---
+
+## Architecture
 
 ```text
                  Client
@@ -38,315 +78,15 @@ The project demonstrates modern backend development practices including Object-O
         Scikit-Learn Classifier
                     │
                     ▼
-        Confidence Threshold Policy
-              │               │
-              ▼               ▼
-      Support Team      Human Review
-              │
-              ▼
-      SQLAlchemy + SQLite
-              │
-              ▼
-        Metrics & Analytics
-```
-
----
-
-##  Tech Stack
-
-| Category         | Technologies |
-| ---------------- | ------------ |
-| Language         | Python 3.13  |
-| API              | FastAPI      |
-| Machine Learning | Scikit-learn |
-| Data Processing  | Pandas       |
-| Validation       | Pydantic     |
-| Database         | SQLite       |
-| ORM              | SQLAlchemy   |
-| Logging          | Loguru       |
-| Testing          | Pytest       |
-| Static Analysis  | MyPy         |
-| Formatting       | Ruff         |
-| Containerization | Docker       |
-
----
-
-##  Project Structure
-
-```text
-ticket-triage/
-│
-├── api/
-├── classifiers/
-├── db/
-├── data/
-├── models/
-├── observers/
-├── pipelines/
-├── policies/
-├── routers/
-├── tests/
-│
-├── Dockerfile
-├── .dockerignore
-├── pyproject.toml
-├── README.md
-├── run_classifier.py
-├── run_phase2.py
-└── run_pipeline.py
-```
-
----
-
-##  API Endpoints
-
-### Submit Ticket
-
-```
-POST /submit
-```
-
-Example Request
-
-```json
-{
-  "title": "Payment failed",
-  "description": "Card declined during subscription upgrade."
-}
-```
-
-Example Response
-
-```json
-{
-  "ticket_id": "...",
-  "category": "Account",
-  "urgency": "High",
-  "confidence": 0.82,
-  "assigned_to": "account-team"
-}
-```
-
----
-
-### Health Check
-
-```
-GET /health
-```
-
-Response
-
-```json
-{
-  "status": "ok",
-  "pipeline_ready": true
-}
-```
-
----
-
-### Metrics
-
-```
-GET /metrics
-```
-
-Returns
-
-* Total processed tickets
-* Human review count
-* Average confidence
-* SLA breach count
-
----
-
-##  Running Locally
-
-Clone the repository
-
-```bash
-git clone https://github.com/<your-username>/ticket-triage.git
-cd ticket-triage
-```
-
-Create a virtual environment
-
-```bash
-python -m venv .venv
-```
-
-Activate it
-
-Windows
-
-```bash
-.venv\Scripts\activate
-```
-
-Install dependencies
-
-```bash
-pip install -e .
-```
-
-Run the API
-
-```bash
-uvicorn api.main:app --reload
-```
-
-Open
-
-```
-http://127.0.0.1:8000/docs
-```
-
----
-
-##  Running with Docker
-
-Build the image
-
-```bash
-docker build -t ticket-triage .
-```
-
-Run the container
-
-```bash
-docker run -p 8000:8000 ticket-triage
-```
-
-Open
-
-```
-http://localhost:8000/docs
-```
-
----
-
-##  Running Tests
-
-```bash
-pytest
-```
-
----
-
-##  Code Quality
-
-Run Ruff
-
-```bash
-ruff format .
-```
-
-Run MyPy
-
-```bash
-python -m mypy .
-```
-
----
-
-##  Future Improvements
-
-* JWT Authentication
-* PostgreSQL support
-* Redis caching
-* Background task queue (Celery)
-* CI/CD with GitHub Actions
-* Cloud deployment
-* Model retraining pipeline
-* Dashboard for analytics
-
----
-
-
-##  Author
-
-**Khushi Gupta**
-
-B.Tech Computer Science Engineering
-
-Aspiring AI/ML & Backend Developer
-
----
-
-##  License
-
-This project is intended for educational and portfolio purposes.
-=======
-# AI Ticket Triage Engine
-
-![Python](https://img.shields.io/badge/Python-3.x-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-REST_API-green)
-![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-ORM-red)
-![Scikit--Learn](https://img.shields.io/badge/Scikit--Learn-ML-orange)
-
-An AI-powered backend system that automatically classifies customer support tickets, predicts their category and urgency, routes them to the appropriate support team using confidence-aware routing, stores processed tickets in SQLite, and exposes REST APIs using FastAPI.
-
-The project demonstrates modern backend engineering practices including machine learning integration, object-oriented design, REST API development, SQLAlchemy ORM, Docker containerization, automated testing, and static type checking. Its modular architecture separates machine learning, routing, persistence, and API layers, making the system easy to maintain and extend.
-
----
-
-## Live Demo
-
-**Deployment in progress.** The live API URL will be added after deployment on Render.
-
----
-
-## Features
-
-* Automatic ticket classification using Scikit-learn
-* Confidence-aware routing based on prediction confidence
-* Human review queue for low-confidence predictions
-* SQLite persistence using SQLAlchemy ORM
-* Metrics endpoint for processed tickets
-* REST API built with FastAPI
-* Interactive Swagger API documentation
-* Dockerized application
-* Unit testing with Pytest
-* Static type checking with MyPy
-* Code formatting with Ruff
-
----
-
-## Design Patterns Used
-
-* Strategy Pattern
-* Observer Pattern
-* Dependency Injection
-* Modular Pipeline Architecture
-
----
-
-## Architecture
-
-```text
-                  Client
-                     │
-                     ▼
-              FastAPI REST API
-                     │
-                     ▼
-             Request Validation
-                     │
-                     ▼
-        Scikit-Learn Classifier
-                     │
-                     ▼
       Confidence Threshold Policy
-              │               │
-              ▼               ▼
+             │               │
+             ▼               ▼
       Support Team      Human Review
-              │
-              ▼
+             │
+             ▼
      SQLAlchemy + SQLite
-              │
-              ▼
+             │
+             ▼
       Metrics & Analytics
 ```
 
@@ -354,20 +94,21 @@ The project demonstrates modern backend engineering practices including machine 
 
 ## Tech Stack
 
-| Category         | Technology   |
-| ---------------- | ------------ |
-| Language         | Python       |
-| API Framework    | FastAPI      |
+| Category | Technology |
+|----------|------------|
+| Language | Python 3.13 |
+| API Framework | FastAPI |
 | Machine Learning | Scikit-learn |
-| Data Processing  | Pandas       |
-| Validation       | Pydantic     |
-| Database         | SQLite       |
-| ORM              | SQLAlchemy   |
-| Logging          | Loguru       |
-| Testing          | Pytest       |
-| Static Analysis  | MyPy         |
-| Code Formatter   | Ruff         |
-| Containerization | Docker       |
+| Data Processing | Pandas |
+| Validation | Pydantic |
+| Database | SQLite |
+| ORM | SQLAlchemy |
+| Logging | Loguru |
+| Testing | Pytest |
+| Static Analysis | MyPy |
+| Formatting | Ruff |
+| Containerization | Docker |
+| Deployment | Render |
 
 ---
 
@@ -380,6 +121,7 @@ ticket-triage/
 ├── classifiers/
 ├── db/
 ├── data/
+├── images/
 ├── models/
 ├── observers/
 ├── pipelines/
@@ -400,13 +142,15 @@ ticket-triage/
 
 ## API Endpoints
 
-| Method | Endpoint   | Description                                |
-| ------ | ---------- | ------------------------------------------ |
-| POST   | `/submit`  | Submit a support ticket for classification |
-| GET    | `/health`  | Check application health                   |
-| GET    | `/metrics` | View ticket processing metrics             |
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/submit` | Submit a support ticket for classification |
+| GET | `/health` | Check API health |
+| GET | `/metrics` | View ticket processing metrics |
 
-### Example Request
+---
+
+## Example Request
 
 ```json
 {
@@ -415,7 +159,9 @@ ticket-triage/
 }
 ```
 
-### Example Response
+---
+
+## Example Response
 
 ```json
 {
@@ -429,50 +175,50 @@ ticket-triage/
 
 ---
 
-## Getting Started
+## Running Locally
 
-### Clone the Repository
+Clone the repository
 
 ```bash
 git clone https://github.com/khushiiiguptaa06-hub/ticket-triage.git
 cd ticket-triage
 ```
 
-### Create a Virtual Environment
+Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-### Activate the Environment
+Activate it
 
-**Windows**
+### Windows
 
 ```bash
 .venv\Scripts\activate
 ```
 
-**Linux / macOS**
+### Linux / macOS
 
 ```bash
 source .venv/bin/activate
 ```
 
-### Install Dependencies
+Install dependencies
 
 ```bash
 pip install -e .
 ```
 
-### Run the Application
+Run the API
 
 ```bash
 uvicorn api.main:app --reload
 ```
 
-Open the Swagger documentation:
+Open:
 
-```text
+```
 http://127.0.0.1:8000/docs
 ```
 
@@ -480,29 +226,27 @@ http://127.0.0.1:8000/docs
 
 ## Running with Docker
 
-Build the Docker image:
+Build the Docker image
 
 ```bash
 docker build -t ticket-triage .
 ```
 
-Run the container:
+Run the container
 
 ```bash
 docker run -p 8000:8000 ticket-triage
 ```
 
-Access the API:
+Open:
 
-```text
+```
 http://localhost:8000/docs
 ```
 
 ---
 
-## Testing
-
-Run the test suite:
+## Running Tests
 
 ```bash
 pytest
@@ -512,13 +256,13 @@ pytest
 
 ## Code Quality
 
-Format the code:
+Format the project
 
 ```bash
 ruff format .
 ```
 
-Run static type checking:
+Run static type checking
 
 ```bash
 python -m mypy .
@@ -526,27 +270,16 @@ python -m mypy .
 
 ---
 
-## Screenshots
-
-The following screenshots will be added after deployment:
-
-* Swagger API Documentation
-* Ticket Submission Example
-* Metrics Endpoint
-* Docker Container Running
-
----
-
 ## Future Improvements
 
-* JWT Authentication
-* PostgreSQL support
-* Redis caching
-* Background task processing with Celery
-* CI/CD using GitHub Actions
-* Cloud deployment
-* Model retraining pipeline
-* Analytics dashboard
+- JWT Authentication
+- PostgreSQL support
+- Redis caching
+- Background task processing with Celery
+- GitHub Actions CI/CD
+- Kubernetes deployment
+- Model retraining pipeline
+- Analytics dashboard
 
 ---
 
@@ -558,9 +291,10 @@ B.Tech Computer Science Engineering
 
 Aspiring AI/ML & Backend Developer
 
+GitHub: https://github.com/khushiiiguptaa06-hub
+
 ---
 
 ## License
 
-This project is intended for educational and portfolio purposes.
->>>>>>> 1c9c269 (docs: improve README and add Docker support)
+This project is licensed under the MIT License.
