@@ -297,4 +297,4 @@ GitHub: https://github.com/khushiiiguptaa06-hub
 
 ## License
 
-This project is licensed under the MIT License.
+This project is intended for educational and portfolio purposes.
