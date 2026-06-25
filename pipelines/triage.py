@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import Any, cast
 
 from classifiers.sklearn_cls import SklearnClassifier
+from db.models import SessionLocal, TicketRecord
 from models.ticket import Ticket
 from observers.metrics import MetricsCollector
 from policies.threshold import ThresholdPolicy
@@ -54,7 +55,7 @@ class TriagePipeline:
             processed_at,
         )
 
-        return {
+        result = {
             "ticket_id": ticket.id,
             "category": category,
             "urgency": urgency,
@@ -62,3 +63,30 @@ class TriagePipeline:
             "assigned_to": assigned_team,
             "metrics_summary": self.metrics.summary(),
         }
+
+        session = SessionLocal()
+
+        try:
+            record = TicketRecord(
+                id=ticket.id,
+                category=category,
+                urgency=urgency,
+                confidence=confidence,
+                routed_to=assigned_team,
+                sla_breach=False,
+            )
+
+            session.add(record)
+            session.commit()
+
+        except Exception as e:
+            session.rollback()
+
+            from loguru import logger
+
+            logger.error(f"DB write failed for ticket {ticket.id}: {e}")
+
+        finally:
+            session.close()
+
+        return result

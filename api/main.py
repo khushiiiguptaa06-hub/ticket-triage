@@ -7,7 +7,9 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException
 from loguru import logger
 from pydantic import BaseModel
+from sqlalchemy import func
 
+from db.models import SessionLocal, TicketRecord, init_db
 from models.ticket import Ticket
 from pipelines.triage import TriagePipeline
 
@@ -26,6 +28,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     global pipeline
 
     logger.info("Loading training data and initializing pipeline...")
+    init_db()
 
     df = pd.read_csv(DATA_PATH)
 
@@ -77,3 +80,41 @@ async def health_check() -> dict[str, Any]:
         "status": "ok",
         "pipeline_ready": pipeline is not None,
     }
+
+
+@app.get("/metrics")
+async def get_metrics() -> dict[str, Any]:
+    session = SessionLocal()
+
+    try:
+        total = session.query(TicketRecord).count()
+
+        if total == 0:
+            return {
+                "message": "No tickets processed yet",
+            }
+
+        human_reviews = (
+            session.query(TicketRecord).filter_by(routed_to="human-review").count()
+        )
+
+        avg_conf = session.query(func.avg(TicketRecord.confidence)).scalar() or 0.0
+
+        sla_breaches = session.query(TicketRecord).filter_by(sla_breach=True).count()
+
+        return {
+            "total_processed": total,
+            "human_review_count": human_reviews,
+            "human_review_ratio": round(
+                human_reviews / total,
+                2,
+            ),
+            "avg_confidence": round(
+                float(avg_conf),
+                3,
+            ),
+            "sla_breach_count": sla_breaches,
+        }
+
+    finally:
+        session.close()
